@@ -1,9 +1,8 @@
 // express web server
 const express = require("express");
 const app = express();
-const lesson1Controller = require("./controllers/lesson1");
 
-app.get("/", lesson1Controller.amberRoute);
+app.use("/", require("./routes"));
 
 const port = 3500;
 
