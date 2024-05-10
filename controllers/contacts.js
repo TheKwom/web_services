@@ -25,4 +25,75 @@ const getIndividualById = async (req, res, next) => {
     res.status(200).json(lists[0]);
   });
 };
-module.exports = { getData, getIndividualById };
+
+const createContact = async (req, res) => {
+  const contact = {
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    email: req.body.email,
+    favoriteColor: req.body.favoriteColor,
+    birthday: req.body.birthday,
+  };
+  const response = await mongodb
+    .getDb()
+    .db("sample_mflix")
+    .collection("contacts")
+    .insertOne(contact);
+  if (response.acknowledged) {
+    res.status(201).json(response);
+  } else {
+    res
+      .status(500)
+      .json(response.error || "An error occured while creating the contact");
+  }
+};
+
+const updateContact = async (req, res) => {
+  const userId = new ObjectId(req.params.id);
+
+  const contact = {
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    email: req.body.email,
+    favoriteColor: req.body.favoriteColor,
+    birthday: req.body.birthday,
+  };
+  const response = await mongodb
+    .getDb()
+    .db("sample_mflix")
+    .collection("contacts")
+    .replaceOne({ _id: userId }, contact);
+  console.log(response);
+  if (response.modifiedCount > 0) {
+    res.status(204).send();
+  } else {
+    res
+      .status(500)
+      .json(response.error || "An error occurred while updating the contact.");
+  }
+};
+
+const deleteContact = async (req, res) => {
+  const userId = new ObjectId(req.params.id);
+  const response = await mongodb
+    .getDb()
+    .db("sample_mflix")
+    .collection("contacts")
+    .deleteOne({ _id: userId }, true);
+  console.log(response);
+  if (response.deletedCount > 0) {
+    res.status(204).send();
+  } else {
+    res
+      .status(500)
+      .json(response.error || "An error occurred while deleting the contact.");
+  }
+};
+
+module.exports = {
+  getData,
+  getIndividualById,
+  createContact,
+  updateContact,
+  deleteContact,
+};
