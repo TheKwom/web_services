@@ -5,7 +5,7 @@ const doc = {
     title: "Contacts",
     description: "This is a description",
   },
-  host: "localhost:3500",
+  host: "https://cse341-spring24-uwqp.onrender.com/contacts",
   schemes: ["http"],
 };
 console.log(doc);
